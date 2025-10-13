@@ -6,19 +6,66 @@
     <meta name="viewport" content="width=device-width, intial-scale=1.0">
     <title>Document</title>
 </head>
-<h2>BMI Calculator</h2>
+<body> 
+    <main class="container"> 
+        <h1>BMI Calculator</h1> 
+        <p class="muted">Validates inputs, computes BMI, and shows the correct categoryfor adults. For ages 2–19, BMI-for-age percentiles are required.</p> 
 
-<label for="weight">Weight (lbs)</label>
-<input id="weights" type="numbers">
-<label for="height">Height (in)</label>
-<input id="height" type="numbers">
-<button onclick='calculateBMI()'> Submit</button>
-<button onclick='reload()'> Submit</button>
+        <form id="bmiform" novalidate> 
+            <div class="grid"> 
+                <label> Age (years) 
+                    <input type="number" id="age" name="age" min="2" max="120" required>
+                </label>  
 
-<h4 id='heading'></h4>
-<p id='bmi-output'></p>
-<p id='message'></p>
+                <label> Sex 
+                    <select id="sex" required> 
+                        <option value="">Select...</option> 
+                        <option value="female">Female</option> 
+                        <option value="male">Male</option> 
+                    </select>
+                </label> 
 
-<script scr="script.js"></script>
+                <label> Units
+                        <select id="units" required> 
+                            <option value="">Select...</option> 
+                            <option value="metric">Metric (kg, cm)</option> 
+                            <option value="imperial">Imperial (lbs, in)</option>
+                        </select>
+                </label> 
+
+                <label> Weight <span id="wlabel">(kg)</span> 
+                    <input type="number" id="weight" name="weight" min="1" max="635" step="0.1" required>
+                </label> 
+
+                <label> Height <span id="hlabel">(cm)</span> 
+                    <input type="number" id="height" name="height" min="30" max="272" step="0.1" required> 
+                </label>
+            </div> 
+
+            <div class="actions"> 
+                <button type="submit">Calculate BMI</button> 
+                <button type="reset">Reset</button>
+            </div>
+        </form>  
+
+        <div id="errors" class="error hidden"></div> 
+
+        <details> 
+            <summary>Adults thresholds (WHO)</summary> 
+            <table class="range-table"> 
+            <thead><tr><th>Category</th><th>BMI (kg/m²)</th></tr></thead>
+            <tbody>
+                <tr><td>Underweight</td><td>&lt; 18.5</td></tr>
+                <tr><td>Normal weight</td><td>18.5 – 24.9</td></tr>
+                <tr><td>Overweight</td><td>25.0 – 29.9</td></tr>
+                <tr><td>Obesity Class I</td><td>30.0 – 34.9</td></tr>
+                <tr><td>Obesity Class II</td><td>35.0 – 39.9</td></tr>
+                <tr><td>Obesity Class III</td><td>≥ 40.0</td></tr>
+            </tbody>
+            </table>
+        </details>
+    </main> 
+    <script src="./app.js"></script>
+</body>
 
 </html>
