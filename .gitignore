@@ -1,0 +1,14 @@
+# Python
+venv/
+.venv/
+backend/venv/
+*.py[cod]
+__pycache__/
+.pytest_cache/
+*.egg-info/
+.env
+.env.*
+
+# IDEs
+.vscode/
+.idea/
