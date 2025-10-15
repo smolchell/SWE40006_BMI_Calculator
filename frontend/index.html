@@ -7,55 +7,75 @@
     <title>Document</title> 
     <link rel="stylesheet" href="style.css">
 </head>
-<body> 
-    <main class="container"> 
-        <h1>BMI Calculator</h1> 
-        <p class="muted">Validates inputs, computes BMI, and shows the correct categoryfor adults. For ages 2–19, BMI-for-age percentiles are required.</p> 
-
-        <form id="bmiform" novalidate> 
-            <div class="grid"> 
-                <label> Age (years) 
-                    <input type="number" id="age" name="age" min="2" max="120" required>
-                </label>  
-
-                <fieldset>  
-                    <legend>Sex</legend> 
-                    <label><input type="radio" name="sex" value="female">Female</label>
-                    <label><input type="radio" name="sex" value="male">Male</label>
-                </fieldset>
-
-                <label> Weight <span id="wlabel">(kg)</span> 
-                    <input type="number" id="weight" name="weight" min="1" max="635" step="0.1" required>
-                </label> 
-
-                <label> Height <span id="hlabel">(cm)</span> 
-                    <input type="number" id="height" name="height" min="30" max="272" step="0.1" required> 
-                </label>
-            </div> 
-
-            <div class="actions"> 
-                <button type="submit">Calculate BMI</button> 
-                <button type="reset">Reset</button>
+<body>  
+      <div class="frame">
+    <div class="grid">
+      <!-- Left: Calculator -->
+      <section class="card">
+        <h2>BMI Calculator</h2>
+        <form id="bmiForm" onsubmit="event.preventDefault(); calculateBMI();">
+          <div class="form-grid">
+            <label>Sex:</label>
+            <div class="row">
+              <label class="small"><input type="radio" name="sex" value="male" checked> Male</label>
+              <label class="small"><input type="radio" name="sex" value="female"> Female</label>
             </div>
-        </form>  
 
-        <div id="errors" class="error hidden"></div> 
+            <label for="age">Age:</label>
+            <input id="age" type="number" min="1" max="120" placeholder="Years" required>
 
-        <details> 
-            <summary>Adults thresholds (WHO)</summary> 
-            <table class="range-table"> 
-            <thead><tr><th>Category</th><th>BMI (kg/m²)</th></tr></thead>
-            <tbody>
-                <tr><td>Underweight</td><td>&lt; 18.5</td></tr>
-                <tr><td>Normal weight</td><td>18.5 – 24.9</td></tr>
-                <tr><td>Overweight</td><td>25.0 – 29.9</td></tr>
-                <tr><td>Obesity Class I</td><td>30.0 – 34.9</td></tr>
-                <tr><td>Obesity Class II</td><td>35.0 – 39.9</td></tr>
-                <tr><td>Obesity Class III</td><td>≥ 40.0</td></tr>
-            </tbody>
-            </table>
-        </details>
-    </main> 
+            <label for="height">Height (cm):</label>
+            <input id="height" type="number" min="50" max="260" step="0.1" placeholder="e.g. 170" required>
+
+            <label for="weight">Weight (kg):</label>
+            <input id="weight" type="number" min="10" max="300" step="0.1" placeholder="e.g. 65" required>
+          </div>
+
+          <div class="actions">
+            <button type="submit">Calculate</button>
+            <button type="reset" onclick="resetResult()">Reset</button>
+          </div>
+
+          <!-- Result bar -->
+          <div class="result-wrap" aria-live="polite">
+            <div class="result-label"><strong>Result:</strong></div>
+            <div id="resultBox" class="result-box neutral">
+              <div id="bmiNumber" class="result-num">—</div>
+              <div id="bmiMeaning" class="result-meaning">Enter your details to calculate.</div>
+            </div>
+          </div>
+        </form>
+      </section>
+
+      <!-- Right: BMI ranges -->
+      <aside class="card ranges">
+        <h3><strong>BMI Ranges for X</strong></h3>
+        <table>
+          <thead>
+            <tr><th>BMI Score</th><th>Meaning</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>0 – 18.7</td>
+              <td class="u">Under weight</td>
+            </tr>
+            <tr>
+              <td>18.8 – 22.0</td>
+              <td class="n">Normal</td>
+            </tr>
+            <tr>
+              <td>22.0 – 24.0</td>
+              <td class="o">Over weight</td>
+            </tr>
+            <tr>
+              <td>24.0+</td>
+              <td class="ob">Obese</td>
+            </tr>
+          </tbody>
+        </table>
+      </aside>
+    </div>
+  </div> 
     <script src="./app.js"></script>
 </body>
 
