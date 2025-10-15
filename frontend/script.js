@@ -1,6 +1,6 @@
   function categorize(bmi){
     // Match the visual table: <=18.7 under, (18.7,22.0] normal, (22.0,24.0] over, >24 obese
-    if (bmi <= 18.7) return {text:"Under weight", cls:"warn"};
+    if (bmi <= 18.7) return {text:"Under weight", cls:"neutral"};
     if (bmi <= 22.0) return {text:"Normal", cls:"neutral"};
     if (bmi <= 24.0) return {text:"Over weight", cls:"warn"};
     return {text:"Obese", cls:"bad"};

@@ -1,8 +1,10 @@
   :root{
-    --border:#333; --muted:#eee; --text:#222;
+    --border:#333; --muted:#eee; --text:#222; 
+    --verygood: #76a5af;  /* blue-ish, not used */
     --ok:#d9ead3;        /* greenish */
-    --warn:#fce5cd;      /* orange-ish */
-    --bad:#f4cccc;       /* red-ish */
+    --warn:#c9c485;      /* yellow-ish */ 
+    --bad:#efdfc0;       /* orange-ish */ 
+    --t2diabetes: #f4cccc; /* light red, not used */
     --normal:#d9ead3;    /* same as ok for the “Normal” row */
   }
   *{box-sizing:border-box;font-family:system-ui,-apple-system,Segoe UI,Roboto,Inter,Arial,sans-serif}
@@ -35,10 +37,11 @@
   .ranges h3{margin:0 0 8px 0; text-align:center; font-size:14px}
   table{width:100%; border-collapse:collapse; table-layout:fixed}
   th,td{border:1px solid #555; padding:8px; text-align:center; font-size:14px}
-  .u{background:var(--warn)}
+  .u{background:var(--verygood)}
   .n{background:var(--normal)}
   .o{background:var(--warn)}
-  .ob{background:var(--bad)}
+  .ob{background:var(--bad)} 
+  .mo{background:var(--t2diabetes)}
   /* Result bar */
   .result-wrap{display:flex; margin-top:14px; width:100%}
   .result-label{
