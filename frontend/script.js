@@ -1,35 +1,44 @@
-  function categorize(bmi){
-    // Match the visual table: <=18.7 under, (18.7,22.0] normal, (22.0,24.0] over, >24 obese
-    if (bmi <= 18.7) return {text:"Under weight", cls:"neutral"};
-    if (bmi <= 22.0) return {text:"Normal", cls:"neutral"};
-    if (bmi <= 24.0) return {text:"Over weight", cls:"warn"};
-    return {text:"Obese", cls:"bad"};
+async function calculateBMI() {
+  const hCm = parseFloat(document.getElementById("height").value);
+  const wKg = parseFloat(document.getElementById("weight").value);
+
+  if (!hCm || !wKg || hCm <= 0 || wKg <= 0) {
+    showResult("—", "Please enter valid height and weight.", "warn");
+    return;
   }
 
-  function calculateBMI(){
-    const hCm = parseFloat(document.getElementById("height").value);
-    const wKg = parseFloat(document.getElementById("weight").value);
+  try {
+    const res = await fetch("http://127.0.0.1:8000/bmi", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ height: hCm, weight: wKg })
+    });
 
-    if (!hCm || !wKg || hCm <= 0 || wKg <= 0){
-      showResult("—", "Please enter valid height and weight.", "warn");
-      return;
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({ detail: "Request failed" }));
+      throw new Error(err.detail || "Request failed");
     }
 
-    const hM = hCm / 100;
-    const bmi = wKg / (hM*hM);
-    const cat = categorize(bmi);
+    const data = await res.json(); // {bmi, category}
+    const cls =
+      data.category === "Underweight" ? "neutral" :
+      data.category === "Normal weight" ? "neutral" :
+      data.category === "Overweight" ? "warn" : "bad";
 
-    showResult(bmi.toFixed(1), cat.text, cat.cls);
+    showResult(data.bmi.toFixed(1), data.category, cls);
+  } catch (e) {
+    showResult("—", e.message || "Something went wrong.", "bad");
   }
+}
 
-  function showResult(num, meaning, cls){
-    const box = document.getElementById("resultBox");
-    box.classList.remove("neutral","warn","bad");
-    box.classList.add(cls);
-    document.getElementById("bmiNumber").textContent = num;
-    document.getElementById("bmiMeaning").textContent = meaning;
-  }
+function showResult(num, meaning, cls) {
+  const box = document.getElementById("resultBox");
+  box.classList.remove("neutral", "warn", "bad");
+  box.classList.add(cls);
+  document.getElementById("bmiNumber").textContent = num;
+  document.getElementById("bmiMeaning").textContent = meaning;
+}
 
-  function resetResult(){
-    showResult("—", "Enter your details to calculate.", "neutral");
-  }
+function resetResult() {
+  showResult("—", "Enter your details to calculate.", "neutral");
+}
