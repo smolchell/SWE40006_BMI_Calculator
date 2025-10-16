@@ -1,6 +1,9 @@
 async function calculateBMI() {
   const hCm = parseFloat(document.getElementById("height").value);
   const wKg = parseFloat(document.getElementById("weight").value);
+  const ageVal = parseInt(document.getElementById("age").value, 10);
+  const sexEl = document.querySelector('input[name="sex"]:checked');
+  const sexVal = sexEl ? sexEl.value : undefined;
 
   if (!hCm || !wKg || hCm <= 0 || wKg <= 0) {
     showResult("—", "Please enter valid height and weight.", "warn");
@@ -11,7 +14,7 @@ async function calculateBMI() {
     const res = await fetch("http://127.0.0.1:8000/bmi", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ height: hCm, weight: wKg })
+      body: JSON.stringify({ height: hCm, weight: wKg, age: ageVal, sex: sexVal })
     });
 
     if (!res.ok) {
@@ -19,13 +22,16 @@ async function calculateBMI() {
       throw new Error(err.detail || "Request failed");
     }
 
-    const data = await res.json(); // {bmi, category}
-    const cls =
-      data.category === "Underweight" ? "neutral" :
-      data.category === "Normal weight" ? "neutral" :
-      data.category === "Overweight" ? "warn" : "bad";
+    const data = await res.json(); // {bmi, category, [pediatric_category]}
+    const label = data.pediatric_category || data.category;
+    const meaning = label;
 
-    showResult(data.bmi.toFixed(1), data.category, cls);
+    const cls =
+      label === "Underweight" ? "neutral" :
+      label === "Normal weight" || label === "Healthy weight" ? "neutral" :
+      label === "Overweight" ? "warn" : "bad";
+
+  showResult(Number(data.bmi).toFixed(1), meaning, cls);
   } catch (e) {
     showResult("—", e.message || "Something went wrong.", "bad");
   }
