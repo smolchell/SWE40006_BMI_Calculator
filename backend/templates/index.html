@@ -39,9 +39,9 @@
           <!-- Result bar -->
           <div class="result-wrap" aria-live="polite">
             <div class="result-label"><strong>Result:</strong></div>
-            <div id="resultBox" class="result-box empty">
+            <div id="resultBox" class="result-box" category={{ category }}>
               <div id="bmiNumber" class="result-num" >{{bmi or '-'}}</div>
-              <div id="bmiMeaning" class="result-meaning" >{{category or "Enter your details to calculate."}}</div>
+              <div id="bmiMeaning" class="result-meaning">{{category or "Enter your details to calculate."}}</div>
             </div>
           </div>
         </form>
