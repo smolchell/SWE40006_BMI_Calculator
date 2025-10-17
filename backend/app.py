@@ -13,14 +13,6 @@ from pediatric import bmi_percentile_for_age, pediatric_bmi_category
 from fastapi.responses import HTMLResponse
 from fastapi import FastAPI, Request 
 from typing import Annotated
-
-# class BMIRequest(BaseModel):
-#     weight: float = Form(...)
-#     height: float = Form(...)
-
-#     age:int = Form(...)
-#     sex: str = Form(...)  # 'male' or 'female' (case-insensitive)
-#     model_config = {"extra": "forbid"}
     
 class BMIRequest(BaseModel):
     weight: float 
@@ -40,38 +32,36 @@ app.add_middleware(
 )
 
 # Serve the frontend (static files) under /frontend if the folder exists
-# _FRONTEND_DIR = (Path(__file__).resolve().parent.parent / "frontend").resolve()
-# if _FRONTEND_DIR.exists():
-#     app.mount("/frontend", StaticFiles(directory=str(_FRONTEND_DIR), html=True), name="frontend")
-
 app.mount("/static", StaticFiles(directory="static"), name="static")
 
 templates = Jinja2Templates(directory="templates")
 
 @app.get("/", response_class=HTMLResponse)
 def index(request: Request):
-    return templates.TemplateResponse('index.html',  {"request": request})
+    return templates.TemplateResponse('index.html',  {"request": request, "male":"checked"})
 
 @app.post("/")
 def bmi_endpoint(req: Annotated[BMIRequest, Form()], request: Request):
     try:
         # Determine height in meters from either height (cm) or height_cm (cm)
-        height_cm = None
-        if req.height is not None:
-            height_cm = float(req.height)
+        height_cm = float(req.height)
 
         h_m = height_cm / 100.0
         bmi = calculate_bmi(req.weight, h_m)
         category = bmi_category(bmi)
+        age = req.age
+        weight = req.weight
+        male = "checked" if req.sex == "male" else ""
+        female = "checked" if req.sex == "female" else ""     
 
-        resp = {"bmi": bmi, "category": category}
+        response = {"request": request, "bmi": bmi, "category": category, "age": age, "height": height_cm, "weight": weight, "male":male, "female":female}
         # Include optional fields in response for UI echoing
         if req.age is not None:
-            resp["age"] = req.age
+            response["age"] = req.age
         if req.sex is not None:
             sex_norm = str(req.sex).strip().lower()
             if sex_norm in {"male", "female"}:
-                resp["sex"] = sex_norm
+                response["sex"] = sex_norm
         # Pediatric classification for ages < 20 if sex is provided
         if req.age is not None and req.sex is not None:
             try:
@@ -80,12 +70,10 @@ def bmi_endpoint(req: Annotated[BMIRequest, Form()], request: Request):
                 if 2 <= age_years < 20 and sex_norm in {"male", "female"}:
                     pct = bmi_percentile_for_age(bmi, age_years, sex_norm)
                     if pct is not None:
-                        resp["pediatric_category"] = pediatric_bmi_category(pct)
+                        response["pediatric_category"] = pediatric_bmi_category(pct)
             except Exception:
                 pass
-            print(req)
-            print(resp)
-        return templates.TemplateResponse('index.html', {"request": request, "bmi": bmi, "category": category})
+        return templates.TemplateResponse('index.html', response)
     except ValueError as e:
         raise HTTPException(status_code=400, detail=str(e))
 
