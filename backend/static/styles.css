@@ -1,11 +1,11 @@
   :root{
     --border:#333; --muted:#eee; --text:#222; 
-    --verygood: #76a5af;  /* blue-ish, not used */
-    --ok:#d9ead3;        /* greenish */
-    --warn:#c9c485;      /* yellow-ish */ 
-    --bad:#efdfc0;       /* orange-ish */ 
-    --t2diabetes: #f4cccc; /* light red, not used */
-    --normal:#d9ead3;    /* same as ok for the “Normal” row */
+    --normal:#87ff5c;        /* greenish */
+    --underWeight:#7ce2f9;      /* yellow-ish */ 
+    --overWeight:#e9d961;       /* orange-ish */ 
+    --obese: #fd963c; /* light red, not used */
+    --severlyObese:#ff5858;    /* same as ok for the “Normal” row */
+	  --empty:#ffffff;
   }
   *{box-sizing:border-box;font-family:system-ui,-apple-system,Segoe UI,Roboto,Inter,Arial,sans-serif}
   body{margin:0;padding:24px;background:#fff;color:var(--text)}
@@ -37,11 +37,10 @@
   .ranges h3{margin:0 0 8px 0; text-align:center; font-size:14px}
   table{width:100%; border-collapse:collapse; table-layout:fixed}
   th,td{border:1px solid #555; padding:8px; text-align:center; font-size:14px}
-  .u{background:var(--verygood)}
+  .u{background:var(--underWeight)}
   .n{background:var(--normal)}
-  .o{background:var(--warn)}
-  .ob{background:var(--bad)} 
-  .mo{background:var(--t2diabetes)}
+  .o{background:var(--overWeight)}
+  .ob{background:var(--obese)} 
   /* Result bar */
   .result-wrap{display:flex; margin-top:14px; width:100%}
   .result-label{
@@ -50,13 +49,15 @@
   .result-box{
     flex:1; border:1px solid #555; border-left:none; padding:14px;
     display:flex; justify-content:space-between; gap:12px; align-items:center;
-    background:var(--ok);
+    background:var(--empty);
   }
   .result-num{min-width:60px; text-align:center}
   .result-meaning{text-align:left; flex:1}
-  .result-box.warn{background:var(--warn)}
-  .result-box.bad{background:var(--bad)}
-  .result-box.neutral{background:var(--normal)}
+  /* Update text box colour depending on output*/
+  .result-box[category="Under"]{background:var(--underWeight)}
+  .result-box[category="Normal"]{background:var(--normal)}
+  .result-box[category="Over"]{background:var(--overWeight)}
+  .result-box[category="Obese"]{background:var(--obese)}
   /* Responsive */
   @media (max-width:900px){
     .grid{grid-template-columns:1fr}

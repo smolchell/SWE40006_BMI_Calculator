@@ -126,9 +126,9 @@ def bmi_percentile_for_age(bmi: float, age_years: float, sex: str) -> Optional[f
 def pediatric_bmi_category(percentile: float) -> str:
 
     if percentile < 5.0:
-        return "Underweight"
+        return "Under Weight"
     if percentile < 85.0:
-        return "Healthy weight"
+        return "Normal Weight"
     if percentile < 95.0:
-        return "Overweight"
-    return "Obesity"
+        return "Over Weight"
+    return "Obese"

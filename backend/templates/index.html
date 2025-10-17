@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, intial-scale=1.0">
     <title>Document</title> 
-    <link rel="stylesheet" href="style.css">
+    <link href="{{ url_for('static', path='/styles.css') }}" rel="stylesheet">
 </head>
 <body>  
       <div class="frame">
@@ -13,22 +13,22 @@
       <!-- Left: Calculator -->
       <section class="card">
         <h2>BMI Calculator</h2>
-        <form id="bmiForm" onsubmit="event.preventDefault(); calculateBMI();">
+        <form id="bmiForm" method="post">
           <div class="form-grid">
             <label>Sex:</label>
             <div class="row">
-              <label class="small"><input type="radio" name="sex" value="male" checked> Male</label>
-              <label class="small"><input type="radio" name="sex" value="female"> Female</label>
+              <label class="small"><input class="radioBttn" type="radio" name="sex" value="male" {{ male }}> Male</label>
+              <label class="small"><input class="radioBttn" type="radio" name="sex" value="female" {{ female }}> Female</label>
             </div>
 
             <label for="age">Age:</label>
-            <input id="age" type="number" min="1" max="120" placeholder="Years" required>
+            <input id="age" name="age" type="number" min="1" max="120" placeholder="Years" value="{{ age or ''}}" required>
 
             <label for="height">Height (cm):</label>
-            <input id="height" type="number" min="50" max="260" step="0.1" placeholder="e.g. 170" required>
+            <input id="height" name="height" type="number" min="10" max="260" step="0.1" placeholder="e.g. 170" value="{{ height or ''}}" required>
 
             <label for="weight">Weight (kg):</label>
-            <input id="weight" type="number" min="10" max="300" step="0.1" placeholder="e.g. 65" required>
+            <input id="weight" name="weight" type="number" min="10" max="300" step="0.1" placeholder="e.g. 65" value="{{ weight or ''}}" required>
           </div>
 
           <div class="actions">
@@ -39,9 +39,9 @@
           <!-- Result bar -->
           <div class="result-wrap" aria-live="polite">
             <div class="result-label"><strong>Result:</strong></div>
-            <div id="resultBox" class="result-box neutral">
-              <div id="bmiNumber" class="result-num">—</div>
-              <div id="bmiMeaning" class="result-meaning">Enter your details to calculate.</div>
+            <div id="resultBox" class="result-box" category={{ category }}>
+              <div id="bmiNumber" class="result-num" >{{bmi or '-'}}</div>
+              <div id="bmiMeaning" class="result-meaning">{{category or "Enter your details to calculate."}}</div>
             </div>
           </div>
         </form>
@@ -51,36 +51,26 @@
       <aside class="card ranges">
         <h3><strong>BMI ranges</strong></h3>
         <table>
-          <thead>
-            <tr><th>BMI Score</th><th>Meaning</th></tr>
+          <thead><th>BMI Score Meaning</th></tr>
           </thead>
           <tbody>
             <tr>
-              <td>&le;18.7</td>
-              <td class="u">Under weight</td>
+              <td class="u">Under Weight</td>
             </tr>
             <tr>
-              <td>18.8 – 24.9</td>
-              <td class="n">Normal</td>
+              <td class="n">Normal Weight</td>
             </tr>
             <tr>
-              <td>25.0 – 29.9</td>
-              <td class="o">Over weight</td>
+              <td class="o">Over Weight</td>
             </tr>
             <tr>
-              <td>30.0 - 39.9</td>
               <td class="ob">Obese</td>
             </tr> 
-            <tr>
-              <td>40.0+</td>
-              <td class="mo">Morbily obese</td>
-            </tr>
           </tbody> 
         </table>
       </aside>
     </div>
   </div> 
-    <script src="./script.js"></script>
 </body>
 
 </html>
