@@ -1,20 +1,33 @@
 from typing import Optional
 
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, Form
 from pydantic import BaseModel, Field
 from pathlib import Path
 from fastapi.staticfiles import StaticFiles
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.templating import Jinja2Templates
 from bmi import calculate_bmi, bmi_category
 from pediatric import bmi_percentile_for_age, pediatric_bmi_category
 
-class BMIRequest(BaseModel):
-    weight: float = Field(..., gt=0, description="Weight in kilograms")
-    height: Optional[float] = Field(None, gt=0, description="Height in centimeters")
-    height_cm: Optional[float] = Field(None, gt=0, description="Height in centimeters")
+# new libraries
+from fastapi.responses import HTMLResponse
+from fastapi import FastAPI, Request 
+from typing import Annotated
 
-    age: Optional[int] = Field(None, ge=0)
-    sex: Optional[str] = None  # 'male' or 'female' (case-insensitive)
+# class BMIRequest(BaseModel):
+#     weight: float = Form(...)
+#     height: float = Form(...)
+
+#     age:int = Form(...)
+#     sex: str = Form(...)  # 'male' or 'female' (case-insensitive)
+#     model_config = {"extra": "forbid"}
+    
+class BMIRequest(BaseModel):
+    weight: float 
+    height: float 
+    age:int 
+    sex: str  # 'male' or 'female' (case-insensitive)
+    model_config = {"extra": "forbid"}
 
 app = FastAPI(title="BMI Calculator API", version="1.2")
 
@@ -27,26 +40,25 @@ app.add_middleware(
 )
 
 # Serve the frontend (static files) under /frontend if the folder exists
-_FRONTEND_DIR = (Path(__file__).resolve().parent.parent / "frontend").resolve()
-if _FRONTEND_DIR.exists():
-    app.mount("/frontend", StaticFiles(directory=str(_FRONTEND_DIR), html=True), name="frontend")
+# _FRONTEND_DIR = (Path(__file__).resolve().parent.parent / "frontend").resolve()
+# if _FRONTEND_DIR.exists():
+#     app.mount("/frontend", StaticFiles(directory=str(_FRONTEND_DIR), html=True), name="frontend")
 
-@app.get("/")
-def index():
-    return {"message": "BMI Calculator API", "version": "1.2"}
+app.mount("/static", StaticFiles(directory="static"), name="static")
 
-@app.post("/bmi")
-def bmi_endpoint(req: BMIRequest):
+templates = Jinja2Templates(directory="templates")
+
+@app.get("/", response_class=HTMLResponse)
+def index(request: Request):
+    return templates.TemplateResponse('index.html',  {"request": request})
+
+@app.post("/")
+def bmi_endpoint(req: Annotated[BMIRequest, Form()], request: Request):
     try:
         # Determine height in meters from either height (cm) or height_cm (cm)
         height_cm = None
         if req.height is not None:
             height_cm = float(req.height)
-        if req.height_cm is not None:
-            height_cm = float(req.height_cm)
-
-        if height_cm is None:
-            raise ValueError("Provide height in centimeters via 'height' or 'height_cm'.")
 
         h_m = height_cm / 100.0
         bmi = calculate_bmi(req.weight, h_m)
@@ -71,7 +83,9 @@ def bmi_endpoint(req: BMIRequest):
                         resp["pediatric_category"] = pediatric_bmi_category(pct)
             except Exception:
                 pass
-        return resp
+            print(req)
+            print(resp)
+        return templates.TemplateResponse('index.html', {"request": request, "bmi": bmi, "category": category})
     except ValueError as e:
         raise HTTPException(status_code=400, detail=str(e))
 
