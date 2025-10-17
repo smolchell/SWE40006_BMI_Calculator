@@ -25,7 +25,7 @@
             <input id="age" type="number" min="1" max="120" placeholder="Years" required>
 
             <label for="height">Height (cm):</label>
-            <input id="height" type="number" min="50" max="260" step="0.1" placeholder="e.g. 170" required>
+            <input id="height" type="number" min="10" max="260" step="0.1" placeholder="e.g. 170" required>
 
             <label for="weight">Weight (kg):</label>
             <input id="weight" type="number" min="10" max="300" step="0.1" placeholder="e.g. 65" required>
@@ -39,7 +39,7 @@
           <!-- Result bar -->
           <div class="result-wrap" aria-live="polite">
             <div class="result-label"><strong>Result:</strong></div>
-            <div id="resultBox" class="result-box neutral">
+            <div id="resultBox" class="result-box empty">
               <div id="bmiNumber" class="result-num">—</div>
               <div id="bmiMeaning" class="result-meaning">Enter your details to calculate.</div>
             </div>
@@ -51,30 +51,21 @@
       <aside class="card ranges">
         <h3><strong>BMI ranges</strong></h3>
         <table>
-          <thead>
-            <tr><th>BMI Score</th><th>Meaning</th></tr>
+          <thead><th>BMI Score Meaning</th></tr>
           </thead>
           <tbody>
             <tr>
-              <td>&le;18.7</td>
               <td class="u">Under weight</td>
             </tr>
             <tr>
-              <td>18.8 – 24.9</td>
               <td class="n">Normal</td>
             </tr>
             <tr>
-              <td>25.0 – 29.9</td>
-              <td class="o">Over weight</td>
+              <td class="o">Overweight</td>
             </tr>
             <tr>
-              <td>30.0 - 39.9</td>
               <td class="ob">Obese</td>
             </tr> 
-            <tr>
-              <td>40.0+</td>
-              <td class="mo">Morbily obese</td>
-            </tr>
           </tbody> 
         </table>
       </aside>

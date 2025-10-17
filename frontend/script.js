@@ -27,7 +27,7 @@ async function calculateBMI() {
     const meaning = label;
 
     const cls =
-      label === "Underweight" ? "neutral" :
+      label === "Underweight" ? "empty" :
       label === "Normal weight" || label === "Healthy weight" ? "neutral" :
       label === "Overweight" ? "warn" : "bad";
 
@@ -39,12 +39,12 @@ async function calculateBMI() {
 
 function showResult(num, meaning, cls) {
   const box = document.getElementById("resultBox");
-  box.classList.remove("neutral", "warn", "bad");
+  box.classList.remove("empty", "neutral", "warn", "bad");
   box.classList.add(cls);
   document.getElementById("bmiNumber").textContent = num;
   document.getElementById("bmiMeaning").textContent = meaning;
 }
 
 function resetResult() {
-  showResult("—", "Enter your details to calculate.", "neutral");
+  showResult("—", "Enter your details to calculate.", "empty");
 }
