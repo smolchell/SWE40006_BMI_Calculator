@@ -131,4 +131,4 @@ def pediatric_bmi_category(percentile: float) -> str:
         return "Normal Weight"
     if percentile < 95.0:
         return "Over Weight"
-    return "Obesity"
+    return "Obese"

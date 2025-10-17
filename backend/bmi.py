@@ -18,4 +18,4 @@ def bmi_category(bmi: float) -> str:
         return "Normal Weight"
     if 25 <= bmi < 30:
         return "Over Weight"
-    return "Obesity"
+    return "Obese"
